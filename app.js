@@ -1,10 +1,13 @@
 const express = require("express");
-
+const cors = require("cors");
+const logger = require("morgan");
+const userRoutes = require("./routes/userRoutes");
 const app = express();
 
-app.get("/", (req, res, next) => {
-  res.send("hey");
-  next();
-});
+app.use(express.json());
+app.use(logger("dev"));
+app.use(cors());
+
+app.use("/api/v1/user", userRoutes);
 
 module.exports = app;
