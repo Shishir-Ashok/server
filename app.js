@@ -8,6 +8,6 @@ app.use(express.json());
 app.use(logger("dev"));
 app.use(cors());
 
-app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/users", userRoutes);
 
 module.exports = app;
