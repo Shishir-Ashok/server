@@ -1,4 +1,4 @@
-const mmongoose = require("mongoose");
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 process.on("uncaughtException", (err) => {
@@ -9,7 +9,7 @@ const app = require("./app");
 dotenv.config({ path: "./.env" });
 const DB = process.env.DB.replace("<password>", process.env.DB_PASS);
 
-mmongoose
+mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,

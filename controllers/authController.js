@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../model/userModel");
 const catchAsync = require("../util/catchAsync");
-
+const AppError = require("../util/appError");
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -24,27 +24,25 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   const newUser = await User.create({
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-
   createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
   if (!password || !username) {
-    return next("Please provide username, email and password");
+    return next(new AppError("Please provide username and password", 403));
   }
 
   const user = await User.findOne({ username }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next("Incorrect email or password");
+    return next(new AppError("Incorrect username or password", 403));
   }
 
   createSendToken(user, 200, res);
